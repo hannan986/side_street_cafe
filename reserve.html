@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reserve a Table | Side Street Cafe</title>
+  <meta name="description" content="Book a table at Side Street Cafe in Cockeysville, MD. Homemade soups, sandwiches & good vibes. Open Mon–Sat 11AM–3PM." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown:      #2B1A0E;
+      --terracotta: #B85C2A;
+      --cream:      #F5EDE3;
+      --warm-white: #FAF7F4;
+      --green:      #4A6741;
+      --text-dark:  #1A1008;
+      --text-mid:   #5C3D22;
+      --gold:       #C8922A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--warm-white);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(43,26,14,0.96);
+      box-shadow: 0 2px 16px rgba(43,26,14,0.18);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cream);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--terracotta); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(245,237,227,0.85);
+      transition: color 0.25s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--terracotta); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--brown);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--cream);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--terracotta); }
+
+    /* ─── PAGE HEADER ──────────────────────────────────── */
+    .page-header {
+      position: relative;
+      height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      margin-top: 68px;
+    }
+
+    .page-header-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/restaurants.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .page-header-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(43,26,14,0.60), rgba(43,26,14,0.80));
+    }
+
+    .page-header-content {
+      position: relative;
+      z-index: 2;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.85rem;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: rgba(245,237,227,0.72);
+    }
+
+    /* ─── RESERVATION SECTION ──────────────────────────── */
+    .reserve-section {
+      padding: 5rem 2rem 6rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* ─── INFO PANEL ────────────────────────────────────── */
+    .reserve-info {
+      position: sticky;
+      top: 90px;
+    }
+
+    .info-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .info-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--brown);
+      line-height: 1.25;
+      margin-bottom: 1.25rem;
+    }
+
+    .info-divider {
+      width: 40px;
+      height: 3px;
+      background: var(--terracotta);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-desc {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .info-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .info-list .icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(184,92,42,0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .info-list strong {
+      display: block;
+      color: var(--brown);
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    /* ─── FORM PANEL ────────────────────────────────────── */
+    .reserve-form-wrap {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.8rem 2.5rem;
+      border: 1px solid rgba(43,26,14,0.08);
+      box-shadow: 0 4px 30px rgba(43,26,14,0.07);
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      background: var(--warm-white);
+      border: 1.5px solid rgba(43,26,14,0.14);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.22s, box-shadow 0.22s;
+      width: 100%;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(184,92,42,0.1);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(92,61,34,0.4);
+    }
+
+    .form-group select option { background: #fff; }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--terracotta);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.18s, box-shadow 0.22s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover {
+      background: #a34d22;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(184,92,42,0.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ─── SUCCESS STATE ─────────────────────────────────── */
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .success-box.visible { display: block; }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(74,103,65,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+    }
+
+    .success-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--brown);
+      margin-bottom: 0.75rem;
+    }
+
+    .success-msg {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 1.75rem;
+    }
+
+    .btn-back {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: transparent;
+      border: 1.5px solid var(--terracotta);
+      border-radius: 8px;
+      color: var(--terracotta);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.22s, color 0.22s;
+    }
+    .btn-back:hover { background: var(--terracotta); color: #fff; }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--brown);
+      color: var(--cream);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.4fr;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 3rem;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .footer-logo span { color: var(--terracotta); }
+
+    .footer-brand p {
+      font-size: 0.875rem;
+      color: rgba(245,237,227,0.6);
+      line-height: 1.8;
+      max-width: 240px;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-social { display: flex; gap: 0.6rem; }
+    .footer-social a {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(245,237,227,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      color: rgba(245,237,227,0.6);
+      text-decoration: none;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .footer-social a:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+    .footer-col h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--cream);
+      margin-bottom: 1.1rem;
+    }
+
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-links a { font-size: 0.875rem; color: rgba(245,237,227,0.6); text-decoration: none; transition: color 0.22s; }
+    .footer-links a:hover { color: var(--terracotta); }
+
+    .footer-hours-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .footer-hours-list li { font-size: 0.85rem; color: rgba(245,237,227,0.6); display: flex; justify-content: space-between; gap: 1rem; }
+    .footer-hours-list .closed-day { color: rgba(245,237,227,0.35); }
+
+    .footer-contact-info { display: flex; flex-direction: column; gap: 0.65rem; }
+    .footer-contact-info p { font-size: 0.875rem; color: rgba(245,237,227,0.6); line-height: 1.6; }
+    .footer-contact-info a { color: var(--terracotta); text-decoration: none; }
+
+    .footer-payments {
+      border-top: 1px solid rgba(245,237,227,0.1);
+      border-bottom: 1px solid rgba(245,237,227,0.1);
+      padding: 1.4rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .footer-payments-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,237,227,0.4); }
+    .pay-icons { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .pay-badge { height: 32px; padding: 0 10px; background: #fff; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.18); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.4rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .footer-copy { font-size: 0.75rem; color: rgba(245,237,227,0.35); letter-spacing: 0.03em; }
+    .footer-legal { display: flex; gap: 1.25rem; }
+    .footer-legal a { font-size: 0.75rem; color: rgba(245,237,227,0.35); text-decoration: none; transition: color 0.22s; }
+    .footer-legal a:hover { color: var(--terracotta); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .reserve-section { grid-template-columns: 1fr; gap: 3rem; }
+      .reserve-info { position: static; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; padding: 3rem 1.5rem 2rem; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────────────────── -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">Side Street <span>Cafe</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#menu-highlights">Menu</a></li>
+      <li><a href="index.html#location">Hours</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#location">Find Us</a></li>
+      <li><a href="reserve.html" class="active">Reserve</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#menu-highlights">Menu</a>
+    <a href="index.html#location">Hours</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#location">Find Us</a>
+    <a href="reserve.html">Reserve</a>
+  </div>
+
+  <!-- ─── PAGE HEADER ──────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+      <span class="page-eyebrow">Side Street Cafe</span>
+      <h1 class="page-title">Reserve a Table</h1>
+      <p class="page-subtitle">Cockeysville, Maryland · Mon–Sat 11AM–3PM</p>
+    </div>
+  </div>
+
+  <!-- ─── MAIN CONTENT ─────────────────────────────────── -->
+  <div class="reserve-section">
+
+    <!-- Left info panel -->
+    <div class="reserve-info">
+      <span class="info-eyebrow">Book Your Spot</span>
+      <h2 class="info-title">Come Sit a While</h2>
+      <div class="info-divider"></div>
+      <p class="info-desc">
+        Whether it's a quick weekday lunch or a leisurely catch-up with friends,
+        we'd love to have you. Fill out the form and we'll confirm your reservation
+        within the hour.
+      </p>
+      <ul class="info-list">
+        <li>
+          <div class="icon">📍</div>
+          <div>
+            <strong>Location</strong>
+            10921 York Rd, Cockeysville, MD 21030
+          </div>
+        </li>
+        <li>
+          <div class="icon">📞</div>
+          <div>
+            <strong>Phone</strong>
+            <a href="tel:4103291106" style="color:var(--terracotta);text-decoration:none;">(410) 329-1106</a>
+          </div>
+        </li>
+        <li>
+          <div class="icon">🕐</div>
+          <div>
+            <strong>Hours</strong>
+            Monday – Saturday: 11AM – 3PM<br/>
+            Sunday: Closed
+          </div>
+        </li>
+        <li>
+          <div class="icon">🪑</div>
+          <div>
+            <strong>Capacity</strong>
+            We accommodate up to 20 guests. For larger parties please call us directly.
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="reserve-form-wrap">
+      <div id="formArea">
+        <h3 class="form-title">Make a Reservation</h3>
+        <p class="form-subtitle">All fields marked * are required.</p>
+
+        <form id="reserveForm" novalidate>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First Name *</label>
+              <input type="text" id="fname" name="fname" placeholder="Jane" required />
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name *</label>
+              <input type="text" id="lname" name="lname" placeholder="Smith" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" placeholder="jane@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input type="tel" id="phone" name="phone" placeholder="(410) 000-0000" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">Date *</label>
+              <input type="date" id="date" name="date" required />
+            </div>
+            <div class="form-group">
+              <label for="time">Time *</label>
+              <select id="time" name="time" required>
+                <option value="">Select a time</option>
+                <option>11:00 AM</option>
+                <option>11:30 AM</option>
+                <option>12:00 PM</option>
+                <option>12:30 PM</option>
+                <option>1:00 PM</option>
+                <option>1:30 PM</option>
+                <option>2:00 PM</option>
+                <option>2:30 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="guests">Number of Guests *</label>
+            <select id="guests" name="guests" required>
+              <option value="">Select guests</option>
+              <option>1 Guest</option>
+              <option>2 Guests</option>
+              <option>3 Guests</option>
+              <option>4 Guests</option>
+              <option>5 Guests</option>
+              <option>6 Guests</option>
+              <option>7 Guests</option>
+              <option>8 Guests</option>
+              <option>9 Guests</option>
+              <option>10+ Guests (call us)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="requests">Special Requests</label>
+            <textarea id="requests" name="requests" placeholder="Dietary requirements, high chair, birthday celebration, accessibility needs…"></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submitBtn">Confirm Reservation</button>
+
+        </form>
+      </div>
+
+      <!-- Success message -->
+      <div class="success-box" id="successBox">
+        <div class="success-icon">✓</div>
+        <h3 class="success-title">You're all set!</h3>
+        <p class="success-msg">
+          Thank you for your reservation request.<br/>
+          We'll confirm your table within the hour.<br/>
+          Can't wait to see you at Side Street Cafe!
+        </p>
+        <a href="index.html" class="btn-back">← Back to Home</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── FOOTER ──────────────────────────────────────── -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col footer-brand">
+        <span class="footer-logo">Side Street <span>Cafe</span></span>
+        <p>A cozy neighborhood café tucked just off York Road in Cockeysville, MD. Homemade soups, fresh sandwiches &amp; good vibes since day one.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="Yelp">y</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html#menu-highlights">Menu</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#reviews">Reviews</a></li>
+          <li><a href="index.html#location">Find Us</a></li>
+          <li><a href="reserve.html">Reserve a Table</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <ul class="footer-hours-list">
+          <li><span>Mon – Sat</span><span>11AM – 3PM</span></li>
+          <li class="closed-day"><span>Sunday</span><span>Closed</span></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="footer-contact-info">
+          <p>📍 10921 York Rd<br>Cockeysville, MD 21030</p>
+          <p>📞 <a href="tel:4103291106">(410) 329-1106</a></p>
+          <p>✉️ hello@sidestreetcafe.com</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-payments">
+      <span class="footer-payments-label">We Accept</span>
+      <div class="pay-icons">
+        <div class="pay-badge" title="Google Pay">
+          <svg width="52" height="22" viewBox="0 0 52 22" fill="none">
+            <text x="1" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#4285F4">G</text>
+            <text x="10" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#EA4335">o</text>
+            <text x="18" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#FBBC04">o</text>
+            <text x="26" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#4285F4">g</text>
+            <text x="33" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="500" fill="#5F6368"> Pay</text>
+          </svg>
+        </div>
+        <div class="pay-badge" title="PayPal">
+          <svg width="52" height="22" viewBox="0 0 52 22" fill="none">
+            <text x="4" y="15" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#003087">Pay</text>
+            <text x="25" y="15" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#009cde">Pal</text>
+          </svg>
+        </div>
+        <div class="pay-badge" title="Mastercard">
+          <svg width="46" height="28" viewBox="0 0 46 28" fill="none">
+            <circle cx="16" cy="14" r="10" fill="#EB001B"/>
+            <circle cx="30" cy="14" r="10" fill="#F79E1B"/>
+            <path d="M23 6.26A10 10 0 0 1 26.74 14 10 10 0 0 1 23 21.74 10 10 0 0 1 19.26 14 10 10 0 0 1 23 6.26z" fill="#FF5F00"/>
+          </svg>
+        </div>
+        <div class="pay-badge" title="Apple Pay">
+          <svg width="56" height="22" viewBox="0 0 56 22" fill="none">
+            <path d="M8 4.5 C7 3 5.5 3.5 5 4 C4.5 4.5 4 6 5 7 C5.8 7.8 7.2 8 8 6.8 C8.8 8 10.2 7.8 11 7 C12 6 11.5 4.5 11 4 C10.5 3.5 9 3 8 4.5Z" fill="#1a1a1a"/>
+            <text x="13" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1a1a1a">Pay</text>
+          </svg>
+        </div>
+        <div class="pay-badge" title="Stripe">
+          <svg width="46" height="22" viewBox="0 0 46 22" fill="none">
+            <rect x="2" y="2" width="18" height="18" rx="4" fill="#635BFF"/>
+            <path d="M11 7.5c-1.5 0-2.5 0.7-2.5 1.8 0 2.3 3.8 1.6 3.8 2.9 0 0.5-0.5 0.8-1.3 0.8-1.1 0-2.2-0.5-2.9-1.1v2c0.7 0.4 1.8 0.6 2.9 0.6 1.6 0 2.8-0.8 2.8-2 0-2.4-3.8-1.8-3.8-2.9 0-0.4 0.4-0.7 1.1-0.7 0.9 0 1.9 0.4 2.5 0.9v-2C13 7.7 12 7.5 11 7.5z" fill="white"/>
+            <text x="23" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#635BFF">stripe</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Side Street Cafe Restaurant · All rights reserved</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Set minimum date to today
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Form submission
+    document.getElementById('reserveForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Confirming…';
+
+      // Simulate a short delay then show success
+      setTimeout(() => {
+        document.getElementById('formArea').style.display = 'none';
+        document.getElementById('successBox').classList.add('visible');
+      }, 800);
+    });
+  </script>
+
+</body>
+</html>
