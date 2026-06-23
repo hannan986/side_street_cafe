@@ -365,11 +365,35 @@
     .menu-card {
       background: #fff;
       border-radius: 12px;
-      padding: 2rem 1.8rem;
+      padding: 0;
       border: 1px solid rgba(43,26,14,0.08);
       box-shadow: 0 2px 12px rgba(43,26,14,0.05);
       transition: transform 0.26s ease, box-shadow 0.26s ease;
       cursor: default;
+      overflow: hidden;
+    }
+
+    .menu-card-img {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .menu-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .menu-card:hover .menu-card-img img {
+      transform: scale(1.05);
+    }
+
+    .menu-card-content {
+      padding: 2rem 1.8rem;
     }
 
     .menu-card:hover {
@@ -957,24 +981,44 @@
     </div>
     <div class="menu-grid">
       <div class="menu-card">
-        <span class="menu-tag">Sandwiches</span>
-        <div class="menu-dish">Cuban Sandwich</div>
-        <p class="menu-desc">Pressed with ham, roasted pork, Swiss & pickles — a classic done exactly right. Crisp outside, perfectly melted inside.</p>
+        <div class="menu-card-img">
+          <img src="images/cheese_sandwich.jpg" alt="Cuban Sandwich" loading="lazy" />
+        </div>
+        <div class="menu-card-content">
+          <span class="menu-tag">Sandwiches</span>
+          <div class="menu-dish">Cuban Sandwich</div>
+          <p class="menu-desc">Pressed with ham, roasted pork, Swiss & pickles — a classic done exactly right. Crisp outside, perfectly melted inside.</p>
+        </div>
       </div>
       <div class="menu-card">
-        <span class="menu-tag">Comfort Bowl</span>
-        <div class="menu-dish">Mac n' Cheese</div>
-        <p class="menu-desc">Rich and creamy with black beans, ham & jalapeños. A Side Street signature that keeps regulars coming back week after week.</p>
+        <div class="menu-card-img">
+          <img src="images/download (1).jpeg" alt="Mac n' Cheese" loading="lazy" />
+        </div>
+        <div class="menu-card-content">
+          <span class="menu-tag">Comfort Bowl</span>
+          <div class="menu-dish">Mac n' Cheese</div>
+          <p class="menu-desc">Rich and creamy with black beans, ham & jalapeños. A Side Street signature that keeps regulars coming back week after week.</p>
+        </div>
       </div>
       <div class="menu-card">
-        <span class="menu-tag">Soups</span>
-        <div class="menu-dish">Homemade Chili</div>
-        <p class="menu-desc">Hearty, made in-house from scratch — pairs perfectly with any sandwich on the menu. Ask about today's seasonal soups too.</p>
+        <div class="menu-card-img">
+          <img src="images/soup.jpg" alt="Homemade Chili" loading="lazy" />
+        </div>
+        <div class="menu-card-content">
+          <span class="menu-tag">Soups</span>
+          <div class="menu-dish">Homemade Chili</div>
+          <p class="menu-desc">Hearty, made in-house from scratch — pairs perfectly with any sandwich on the menu. Ask about today's seasonal soups too.</p>
+        </div>
       </div>
       <div class="menu-card">
-        <span class="menu-tag">Drinks</span>
-        <div class="menu-dish">Apple Cider Margarita</div>
-        <p class="menu-desc">A seasonal cocktail that's become a must-order. Crisp, tart and beautifully balanced — you won't find this everywhere.</p>
+        <div class="menu-card-img">
+          <img src="images/Margaritas.jpg" alt="Apple Cider Margarita" loading="lazy" />
+        </div>
+        <div class="menu-card-content">
+          <span class="menu-tag">Drinks</span>
+          <div class="menu-dish">Apple Cider Margarita</div>
+          <p class="menu-desc">A seasonal cocktail that's become a must-order. Crisp, tart and beautifully balanced — you won't find this everywhere.</p>
+        </div>
       </div>
     </div>
   </section>
