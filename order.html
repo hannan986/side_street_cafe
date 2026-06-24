@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Online | Side Street Cafe</title>
+  <meta name="description" content="Order online from Side Street Cafe in Cockeysville, MD. Homemade soups, sandwiches, comfort bowls & drinks." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown:      #2B1A0E;
+      --terracotta: #B85C2A;
+      --cream:      #F5EDE3;
+      --warm-white: #FAF7F4;
+      --text-dark:  #1A1008;
+      --text-mid:   #5C3D22;
+      --gold:       #C8922A;
+      --green:      #4A6741;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--warm-white);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ──────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(43,26,14,0.97);
+      box-shadow: 0 2px 16px rgba(43,26,14,0.18);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cream);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--terracotta); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(245,237,227,0.85);
+      transition: color 0.25s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--terracotta); }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2px;
+      background: var(--cream); border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: var(--brown);
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Playfair Display', serif; font-size: 2rem;
+      color: var(--cream); text-decoration: none; transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--terracotta); }
+
+    /* ─── PAGE HEADER ───────────────────────────────── */
+    .page-header {
+      position: relative;
+      height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; overflow: hidden;
+      margin-top: 68px;
+    }
+    .page-header-bg {
+      position: absolute; inset: 0;
+      background-image: url('images/restaurants.jpg');
+      background-size: cover; background-position: center;
+    }
+    .page-header-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(43,26,14,0.65), rgba(43,26,14,0.82));
+    }
+    .page-header-content { position: relative; z-index: 2; animation: fadeUp 0.8s ease both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-eyebrow {
+      display: inline-block; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--terracotta); margin-bottom: 0.75rem;
+    }
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700; color: var(--cream); line-height: 1.15;
+      margin-bottom: 0.6rem;
+    }
+    .page-subtitle { font-size: 0.95rem; color: rgba(245,237,227,0.7); }
+
+    /* ─── LAYOUT ────────────────────────────────────── */
+    .order-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 5rem;
+      align-items: start;
+    }
+
+    /* ─── LEFT: MENU PANEL ──────────────────────────── */
+    .menu-panel { min-width: 0; }
+
+    /* Category tabs */
+    .cat-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .cat-tab {
+      padding: 0.55rem 1.3rem;
+      border: 1.5px solid rgba(43,26,14,0.15);
+      border-radius: 99px;
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+    .cat-tab:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .cat-tab.active {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: #fff;
+    }
+
+    /* Category heading */
+    .cat-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid rgba(43,26,14,0.08);
+    }
+
+    /* Menu items grid */
+    .menu-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .item-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid rgba(43,26,14,0.08);
+      box-shadow: 0 2px 10px rgba(43,26,14,0.05);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .item-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(43,26,14,0.11);
+    }
+    .item-card.hidden { display: none; }
+
+    .item-img {
+      width: 100%; height: 170px; overflow: hidden;
+      background: var(--cream);
+    }
+    .item-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform 0.5s ease;
+    }
+    .item-card:hover .item-img img { transform: scale(1.05); }
+
+    .item-body {
+      padding: 1.1rem 1.2rem 1.3rem;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .item-tag {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--terracotta);
+      background: rgba(184,92,42,0.09);
+      border-radius: 4px; padding: 0.22rem 0.55rem;
+      align-self: flex-start; margin-bottom: 0.6rem;
+    }
+    .item-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--brown); margin-bottom: 0.4rem; line-height: 1.3;
+    }
+    .item-desc {
+      font-size: 0.82rem; color: #7a5535;
+      line-height: 1.6; flex: 1; margin-bottom: 1rem;
+    }
+    .item-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 0.5rem;
+    }
+    .item-price {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--brown);
+    }
+    .btn-add {
+      padding: 0.5rem 1.1rem;
+      background: var(--terracotta);
+      color: #fff;
+      border: none; border-radius: 7px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem; font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .btn-add:hover { background: #a34d22; transform: scale(1.04); }
+    .btn-add.added {
+      background: var(--green);
+    }
+
+    /* ─── RIGHT: CART ───────────────────────────────── */
+    .cart-panel {
+      position: sticky;
+      top: 86px;
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(43,26,14,0.1);
+      box-shadow: 0 4px 24px rgba(43,26,14,0.08);
+      overflow: hidden;
+    }
+    .cart-header {
+      background: var(--brown);
+      padding: 1.1rem 1.4rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cart-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; font-weight: 700; color: var(--cream);
+    }
+    .cart-count {
+      background: var(--terracotta);
+      color: #fff;
+      font-size: 0.75rem; font-weight: 700;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cart-empty {
+      padding: 2.5rem 1.4rem;
+      text-align: center;
+      color: rgba(92,61,34,0.45);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .cart-empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    .cart-items { max-height: 360px; overflow-y: auto; }
+    .cart-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid rgba(43,26,14,0.07);
+    }
+    .cart-item-img {
+      width: 52px; height: 52px; border-radius: 7px;
+      overflow: hidden; flex-shrink: 0; background: var(--cream);
+    }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name {
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--brown); margin-bottom: 0.3rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cart-item-price { font-size: 0.82rem; color: var(--terracotta); font-weight: 600; }
+    .cart-item-qty {
+      display: flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem;
+    }
+    .qty-btn {
+      width: 24px; height: 24px;
+      border: 1.5px solid rgba(43,26,14,0.18);
+      border-radius: 6px; background: none;
+      font-size: 0.9rem; font-weight: 700; color: var(--brown);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .qty-btn:hover { background: var(--cream); border-color: var(--terracotta); }
+    .qty-num { font-size: 0.85rem; font-weight: 600; color: var(--brown); min-width: 18px; text-align: center; }
+    .remove-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(43,26,14,0.3); font-size: 1rem; padding: 2px;
+      transition: color 0.2s; flex-shrink: 0; margin-top: 2px;
+    }
+    .remove-btn:hover { color: #c0392b; }
+
+    .cart-footer { padding: 1.1rem 1.4rem; border-top: 1px solid rgba(43,26,14,0.08); }
+    .cart-subtotal {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .cart-subtotal span { font-size: 0.85rem; color: var(--text-mid); }
+    .cart-subtotal strong { font-size: 0.85rem; color: var(--brown); }
+    .cart-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.1rem; padding-top: 0.6rem;
+      border-top: 1px solid rgba(43,26,14,0.1);
+    }
+    .cart-total span { font-size: 0.95rem; font-weight: 700; color: var(--brown); }
+    .cart-total strong { font-size: 1.15rem; font-weight: 700; color: var(--brown); }
+
+    .btn-checkout {
+      width: 100%; padding: 0.85rem;
+      background: var(--terracotta); color: #fff;
+      border: none; border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.18s;
+    }
+    .btn-checkout:hover { background: #a34d22; transform: translateY(-1px); }
+    .btn-checkout:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .btn-clear {
+      width: 100%; padding: 0.5rem;
+      background: none; border: none;
+      font-size: 0.78rem; color: rgba(43,26,14,0.4);
+      cursor: pointer; margin-top: 0.5rem;
+      transition: color 0.2s;
+    }
+    .btn-clear:hover { color: #c0392b; }
+
+    /* ─── MOBILE CART BAR ───────────────────────────── */
+    .mobile-cart-bar {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+      background: var(--brown);
+      padding: 0.9rem 1.5rem;
+      align-items: center; justify-content: space-between;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    }
+    .mobile-cart-info { display: flex; align-items: center; gap: 0.75rem; }
+    .mobile-cart-count {
+      background: var(--terracotta); color: #fff;
+      font-size: 0.8rem; font-weight: 700;
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-cart-label { font-size: 0.9rem; color: var(--cream); font-weight: 500; }
+    .mobile-cart-total { font-size: 1rem; font-weight: 700; color: var(--cream); }
+    .mobile-btn-checkout {
+      padding: 0.6rem 1.4rem;
+      background: var(--terracotta); color: #fff;
+      border: none; border-radius: 7px;
+      font-size: 0.85rem; font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ─── CHECKOUT MODAL ────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.55); align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 16px;
+      padding: 2.5rem 2rem; max-width: 480px; width: 100%;
+      text-align: center; animation: fadeUp 0.35s ease;
+    }
+    .modal-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; color: var(--brown); margin-bottom: 0.6rem;
+    }
+    .modal-msg { font-size: 0.9rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1.75rem; }
+    .modal-close {
+      padding: 0.75rem 2.2rem;
+      background: var(--terracotta); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: #a34d22; }
+
+    /* ─── FOOTER ────────────────────────────────────── */
+    footer { background: var(--brown); color: var(--cream); }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr;
+      gap: 3rem; max-width: 1200px; margin: 0 auto; padding: 4rem 2rem 3rem;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: block; }
+    .footer-logo span { color: var(--terracotta); }
+    .footer-brand p { font-size: 0.875rem; color: rgba(245,237,227,0.6); line-height: 1.8; max-width: 240px; margin-bottom: 1.5rem; }
+    .footer-social { display: flex; gap: 0.6rem; }
+    .footer-social a {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid rgba(245,237,227,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(245,237,227,0.6); text-decoration: none;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .footer-social a:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .footer-col h4 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--cream); margin-bottom: 1.1rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-links a { font-size: 0.875rem; color: rgba(245,237,227,0.6); text-decoration: none; transition: color 0.22s; }
+    .footer-links a:hover { color: var(--terracotta); }
+    .footer-hours-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .footer-hours-list li { font-size: 0.85rem; color: rgba(245,237,227,0.6); display: flex; justify-content: space-between; gap: 1rem; }
+    .footer-hours-list .closed-day { color: rgba(245,237,227,0.35); }
+    .footer-contact-info { display: flex; flex-direction: column; gap: 0.65rem; }
+    .footer-contact-info p { font-size: 0.875rem; color: rgba(245,237,227,0.6); line-height: 1.6; }
+    .footer-contact-info a { color: var(--terracotta); text-decoration: none; }
+    .footer-payments {
+      border-top: 1px solid rgba(245,237,227,0.1); border-bottom: 1px solid rgba(245,237,227,0.1);
+      padding: 1.4rem 2rem; display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-payments-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,237,227,0.4); }
+    .pay-icons { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .pay-badge { height: 32px; padding: 0 10px; background: #fff; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.18); }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto; padding: 1.4rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .footer-copy { font-size: 0.75rem; color: rgba(245,237,227,0.35); letter-spacing: 0.03em; }
+    .footer-legal { display: flex; gap: 1.25rem; }
+    .footer-legal a { font-size: 0.75rem; color: rgba(245,237,227,0.35); text-decoration: none; transition: color 0.22s; }
+    .footer-legal a:hover { color: var(--terracotta); }
+
+    /* ─── RESPONSIVE ────────────────────────────────── */
+    @media (max-width: 960px) {
+      .order-layout { grid-template-columns: 1fr; }
+      .cart-panel { display: none; }
+      .mobile-cart-bar { display: flex; }
+      body { padding-bottom: 72px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; padding: 3rem 1.5rem 2rem; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .footer-bottom { flex-direction: column; align-items: center; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .menu-items { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────────────── -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">Side Street <span>Cafe</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#menu-highlights">Menu</a></li>
+      <li><a href="index.html#location">Hours</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#location">Find Us</a></li>
+      <li><a href="reserve.html">Reserve</a></li>
+      <li><a href="order.html" class="active">Order Online</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#menu-highlights">Menu</a>
+    <a href="index.html#location">Hours</a>
+    <a href="index.html#about">About</a>
+    <a href="reserve.html">Reserve</a>
+    <a href="order.html" style="color:var(--terracotta);">Order Online</a>
+  </div>
+
+  <!-- ─── PAGE HEADER ──────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+      <span class="page-eyebrow">Side Street Cafe</span>
+      <h1 class="page-title">Order Online</h1>
+      <p class="page-subtitle">Fresh, homemade · Ready for pickup · Mon–Sat 11AM–3PM</p>
+    </div>
+  </div>
+
+  <!-- ─── ORDER LAYOUT ─────────────────────────────── -->
+  <div class="order-layout">
+
+    <!-- LEFT: Menu -->
+    <div class="menu-panel">
+
+      <!-- Category tabs -->
+      <div class="cat-tabs" id="catTabs">
+        <button class="cat-tab active" data-cat="all">All Items</button>
+        <button class="cat-tab" data-cat="sandwiches">Sandwiches</button>
+        <button class="cat-tab" data-cat="comfort">Comfort Bowls</button>
+        <button class="cat-tab" data-cat="soups">Soups</button>
+        <button class="cat-tab" data-cat="sides">Sides</button>
+        <button class="cat-tab" data-cat="drinks">Drinks</button>
+      </div>
+
+      <!-- Menu items injected by JS -->
+      <div id="menuContainer"></div>
+
+    </div>
+
+    <!-- RIGHT: Cart -->
+    <div class="cart-panel">
+      <div class="cart-header">
+        <span class="cart-title">Your Order</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+      <div id="cartEmpty" class="cart-empty">
+        <div class="cart-empty-icon">🛍️</div>
+        <p>Your cart is empty.<br/>Add items from the menu to get started.</p>
+      </div>
+      <div class="cart-items" id="cartItems" style="display:none;"></div>
+      <div class="cart-footer" id="cartFooter" style="display:none;">
+        <div class="cart-subtotal">
+          <span>Subtotal</span>
+          <strong id="cartSubtotal">$0.00</strong>
+        </div>
+        <div class="cart-subtotal">
+          <span>Tax (6%)</span>
+          <strong id="cartTax">$0.00</strong>
+        </div>
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+        </div>
+        <button class="btn-checkout" id="btnCheckout">Place Order →</button>
+        <button class="btn-clear" id="btnClear">Clear cart</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile cart bar -->
+  <div class="mobile-cart-bar" id="mobileCartBar" style="display:none;">
+    <div class="mobile-cart-info">
+      <div class="mobile-cart-count" id="mobileCartCount">0</div>
+      <span class="mobile-cart-label">items in cart</span>
+    </div>
+    <span class="mobile-cart-total" id="mobileCartTotal">$0.00</span>
+    <button class="mobile-btn-checkout" id="mobileBtnCheckout">Order →</button>
+  </div>
+
+  <!-- Order success modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-icon">🎉</div>
+      <h3 class="modal-title">Order Placed!</h3>
+      <p class="modal-msg">
+        Thank you! Your order has been received.<br/>
+        We'll have it ready for pickup at Side Street Cafe.<br/>
+        <strong>10921 York Rd, Cockeysville, MD</strong>
+      </p>
+      <button class="modal-close" id="modalClose">Back to Menu</button>
+    </div>
+  </div>
+
+  <!-- ─── FOOTER ──────────────────────────────────── -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col footer-brand">
+        <span class="footer-logo">Side Street <span>Cafe</span></span>
+        <p>A cozy neighborhood café tucked just off York Road in Cockeysville, MD. Homemade soups, fresh sandwiches &amp; good vibes since day one.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html#menu-highlights">Menu</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#reviews">Reviews</a></li>
+          <li><a href="reserve.html">Reserve a Table</a></li>
+          <li><a href="order.html">Order Online</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <ul class="footer-hours-list">
+          <li><span>Mon – Sat</span><span>11AM – 3PM</span></li>
+          <li class="closed-day"><span>Sunday</span><span>Closed</span></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="footer-contact-info">
+          <p>📍 10921 York Rd<br>Cockeysville, MD 21030</p>
+          <p>📞 <a href="tel:4103291106">(410) 329-1106</a></p>
+          <p>✉️ hello@sidestreetcafe.com</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-payments">
+      <span class="footer-payments-label">We Accept</span>
+      <div class="pay-icons">
+        <div class="pay-badge" title="Google Pay">
+          <svg width="52" height="22" viewBox="0 0 52 22" fill="none">
+            <text x="1" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#4285F4">G</text>
+            <text x="10" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#EA4335">o</text>
+            <text x="18" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#FBBC04">o</text>
+            <text x="26" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#4285F4">g</text>
+            <text x="33" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="500" fill="#5F6368"> Pay</text>
+          </svg>
+        </div>
+        <div class="pay-badge" title="PayPal">
+          <svg width="52" height="22" viewBox="0 0 52 22" fill="none">
+            <text x="4" y="15" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#003087">Pay</text>
+            <text x="25" y="15" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#009cde">Pal</text>
+          </svg>
+        </div>
+        <div class="pay-badge" title="Mastercard">
+          <svg width="46" height="28" viewBox="0 0 46 28" fill="none">
+            <circle cx="16" cy="14" r="10" fill="#EB001B"/>
+            <circle cx="30" cy="14" r="10" fill="#F79E1B"/>
+            <path d="M23 6.26A10 10 0 0 1 26.74 14 10 10 0 0 1 23 21.74 10 10 0 0 1 19.26 14 10 10 0 0 1 23 6.26z" fill="#FF5F00"/>
+          </svg>
+        </div>
+        <div class="pay-badge" title="Apple Pay">
+          <svg width="56" height="22" viewBox="0 0 56 22" fill="none">
+            <path d="M8 4.5 C7 3 5.5 3.5 5 4 C4.5 4.5 4 6 5 7 C5.8 7.8 7.2 8 8 6.8 C8.8 8 10.2 7.8 11 7 C12 6 11.5 4.5 11 4 C10.5 3.5 9 3 8 4.5Z" fill="#1a1a1a"/>
+            <text x="13" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#1a1a1a">Pay</text>
+          </svg>
+        </div>
+        <div class="pay-badge" title="Stripe">
+          <svg width="46" height="22" viewBox="0 0 46 22" fill="none">
+            <rect x="2" y="2" width="18" height="18" rx="4" fill="#635BFF"/>
+            <path d="M11 7.5c-1.5 0-2.5 0.7-2.5 1.8 0 2.3 3.8 1.6 3.8 2.9 0 0.5-0.5 0.8-1.3 0.8-1.1 0-2.2-0.5-2.9-1.1v2c0.7 0.4 1.8 0.6 2.9 0.6 1.6 0 2.8-0.8 2.8-2 0-2.4-3.8-1.8-3.8-2.9 0-0.4 0.4-0.7 1.1-0.7 0.9 0 1.9 0.4 2.5 0.9v-2C13 7.7 12 7.5 11 7.5z" fill="white"/>
+            <text x="23" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#635BFF">stripe</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Side Street Cafe Restaurant · All rights reserved</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ══════════════════════════════════════════════
+       MENU DATA — add new items here anytime
+       Fields: id, name, cat, desc, price, img
+       cat values: sandwiches | comfort | soups | sides | drinks
+    ══════════════════════════════════════════════ */
+    const MENU = [
+      // ── SANDWICHES ──────────────────────────────
+      {
+        id: 1, cat: 'sandwiches',
+        name: 'Cuban Sandwich',
+        desc: 'Pressed with ham, roasted pork, Swiss & pickles — crisp outside, perfectly melted inside.',
+        price: 12.99,
+        img: 'images/cheese_sandwich.jpg'
+      },
+      {
+        id: 2, cat: 'sandwiches',
+        name: 'Cheesesteak',
+        desc: 'Shaved beef, sautéed peppers & onions, melted provolone on a toasted hoagie roll.',
+        price: 13.99,
+        img: 'images/food_cheesesteak.jpg'
+      },
+      {
+        id: 3, cat: 'sandwiches',
+        name: 'Turkey Club',
+        desc: 'Sliced turkey, crispy bacon, lettuce, tomato, avocado on toasted sourdough.',
+        price: 11.99,
+        img: 'images/images (1).jpeg'
+      },
+      {
+        id: 4, cat: 'sandwiches',
+        name: 'BLT Deluxe',
+        desc: 'Thick-cut bacon, heirloom tomato, butter lettuce, mayo on toasted white bread.',
+        price: 10.99,
+        img: 'images/images (2).jpeg'
+      },
+      // ── COMFORT BOWLS ───────────────────────────
+      {
+        id: 5, cat: 'comfort',
+        name: "Mac n' Cheese",
+        desc: "Rich and creamy with black beans, ham & jalapeños. A Side Street signature.",
+        price: 9.99,
+        img: 'images/download (1).jpeg'
+      },
+      {
+        id: 6, cat: 'comfort',
+        name: 'Greek Salad Bowl',
+        desc: 'Crisp romaine, olives, cucumber, tomato, feta & tangy house dressing.',
+        price: 10.99,
+        img: 'images/food_salad.jpg'
+      },
+      {
+        id: 7, cat: 'comfort',
+        name: 'Lamb & Chicken Rice Bowl',
+        desc: 'Seasoned lamb & chicken over fluffy basmati rice with tzatziki & pita.',
+        price: 13.99,
+        img: 'images/download (2).jpeg'
+      },
+      // ── SOUPS ────────────────────────────────────
+      {
+        id: 8, cat: 'soups',
+        name: 'Homemade Chili',
+        desc: 'Hearty, made in-house from scratch — pairs perfectly with any sandwich.',
+        price: 7.99,
+        img: 'images/soup.jpg'
+      },
+      {
+        id: 9, cat: 'soups',
+        name: 'Soup of the Day',
+        desc: 'Ask us what\'s simmering today. Changes daily with seasonal ingredients.',
+        price: 6.99,
+        img: 'images/food_soup_sandwich.jpg'
+      },
+      {
+        id: 10, cat: 'soups',
+        name: 'Tomato Bisque',
+        desc: 'Slow-roasted tomatoes, fresh basil, a touch of cream. Served with crusty bread.',
+        price: 6.99,
+        img: 'images/download (3).jpeg'
+      },
+      // ── SIDES ────────────────────────────────────
+      {
+        id: 11, cat: 'sides',
+        name: 'Kettle Chips',
+        desc: 'House-seasoned kettle chips, crunchy and perfectly salted.',
+        price: 2.99,
+        img: 'images/download (4).jpeg'
+      },
+      {
+        id: 12, cat: 'sides',
+        name: 'Side Salad',
+        desc: 'Mixed greens, cherry tomatoes, cucumber with your choice of dressing.',
+        price: 4.99,
+        img: 'images/download (5).jpeg'
+      },
+      {
+        id: 13, cat: 'sides',
+        name: 'Homemade Brownie',
+        desc: 'Dense, fudgy, baked fresh daily. A sweet finish to your meal.',
+        price: 3.99,
+        img: 'images/download (6).jpeg'
+      },
+      // ── DRINKS ───────────────────────────────────
+      {
+        id: 14, cat: 'drinks',
+        name: 'Apple Cider Margarita',
+        desc: 'A seasonal cocktail that\'s become a must-order. Crisp, tart and beautifully balanced.',
+        price: 8.99,
+        img: 'images/Margaritas.jpg'
+      },
+      {
+        id: 15, cat: 'drinks',
+        name: 'Fresh Lemonade',
+        desc: 'Squeezed daily, lightly sweetened, served over ice. Classic and refreshing.',
+        price: 3.49,
+        img: 'images/download (7).jpeg'
+      },
+      {
+        id: 16, cat: 'drinks',
+        name: 'House Iced Tea',
+        desc: 'Brewed black tea, lightly sweetened. Ask for the unsweetened option.',
+        price: 2.99,
+        img: 'images/images (3).jpeg'
+      },
+    ];
+
+    /* ══════════════════════════════════════════════
+       CART STATE
+    ══════════════════════════════════════════════ */
+    let cart = []; // { id, name, price, img, qty }
+
+    /* ══════════════════════════════════════════════
+       RENDER MENU
+    ══════════════════════════════════════════════ */
+    const CAT_LABELS = {
+      sandwiches: 'Sandwiches',
+      comfort:    'Comfort Bowls',
+      soups:      'Soups',
+      sides:      'Sides',
+      drinks:     'Drinks',
+    };
+
+    function renderMenu(filter = 'all') {
+      const container = document.getElementById('menuContainer');
+      container.innerHTML = '';
+
+      const cats = filter === 'all'
+        ? Object.keys(CAT_LABELS)
+        : [filter];
+
+      cats.forEach(cat => {
+        const items = MENU.filter(i => i.cat === cat);
+        if (!items.length) return;
+
+        const section = document.createElement('div');
+        section.style.marginBottom = '2.5rem';
+        section.innerHTML = `<h2 class="cat-heading">${CAT_LABELS[cat]}</h2>
+          <div class="menu-items" id="grid-${cat}"></div>`;
+        container.appendChild(section);
+
+        const grid = section.querySelector(`#grid-${cat}`);
+        items.forEach(item => {
+          const inCart = cart.find(c => c.id === item.id);
+          const card = document.createElement('div');
+          card.className = 'item-card';
+          card.dataset.id = item.id;
+          card.innerHTML = `
+            <div class="item-img">
+              <img src="${item.img}" alt="${item.name}" loading="lazy"
+                onerror="this.style.display='none'"/>
+            </div>
+            <div class="item-body">
+              <span class="item-tag">${CAT_LABELS[item.cat]}</span>
+              <div class="item-name">${item.name}</div>
+              <p class="item-desc">${item.desc}</p>
+              <div class="item-footer">
+                <span class="item-price">$${item.price.toFixed(2)}</span>
+                <button class="btn-add${inCart ? ' added' : ''}"
+                  onclick="addToCart(${item.id})">
+                  ${inCart ? '✓ Added' : '+ Add'}
+                </button>
+              </div>
+            </div>`;
+          grid.appendChild(card);
+        });
+      });
+    }
+
+    /* ══════════════════════════════════════════════
+       CART LOGIC
+    ══════════════════════════════════════════════ */
+    function addToCart(id) {
+      const item = MENU.find(i => i.id === id);
+      const existing = cart.find(c => c.id === id);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ ...item, qty: 1 });
+      }
+      updateCartUI();
+      flashAddBtn(id);
+    }
+
+    function changeQty(id, delta) {
+      const idx = cart.findIndex(c => c.id === id);
+      if (idx === -1) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      updateCartUI();
+    }
+
+    function removeItem(id) {
+      cart = cart.filter(c => c.id !== id);
+      updateCartUI();
+    }
+
+    function clearCart() {
+      cart = [];
+      updateCartUI();
+    }
+
+    function flashAddBtn(id) {
+      document.querySelectorAll(`.item-card[data-id="${id}"] .btn-add`).forEach(btn => {
+        btn.classList.add('added');
+        btn.textContent = '✓ Added';
+      });
+    }
+
+    function updateCartUI() {
+      const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+      const tax   = total * 0.06;
+      const grand = total + tax;
+      const count = cart.reduce((s, c) => s + c.qty, 0);
+
+      // count badges
+      document.getElementById('cartCount').textContent       = count;
+      document.getElementById('mobileCartCount').textContent = count;
+
+      // totals
+      document.getElementById('cartSubtotal').textContent  = `$${total.toFixed(2)}`;
+      document.getElementById('cartTax').textContent       = `$${tax.toFixed(2)}`;
+      document.getElementById('cartTotal').textContent     = `$${grand.toFixed(2)}`;
+      document.getElementById('mobileCartTotal').textContent = `$${grand.toFixed(2)}`;
+
+      const emptyEl  = document.getElementById('cartEmpty');
+      const itemsEl  = document.getElementById('cartItems');
+      const footerEl = document.getElementById('cartFooter');
+      const mobileBar = document.getElementById('mobileCartBar');
+
+      if (cart.length === 0) {
+        emptyEl.style.display  = 'block';
+        itemsEl.style.display  = 'none';
+        footerEl.style.display = 'none';
+        mobileBar.style.display = 'none';
+        // reset add buttons
+        document.querySelectorAll('.btn-add').forEach(b => {
+          b.classList.remove('added');
+          b.textContent = '+ Add';
+        });
+      } else {
+        emptyEl.style.display  = 'none';
+        itemsEl.style.display  = 'block';
+        footerEl.style.display = 'block';
+        mobileBar.style.display = 'flex';
+
+        itemsEl.innerHTML = cart.map(c => `
+          <div class="cart-item">
+            <div class="cart-item-img">
+              <img src="${c.img}" alt="${c.name}"
+                onerror="this.style.display='none'"/>
+            </div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">${c.name}</div>
+              <div class="cart-item-price">$${(c.price * c.qty).toFixed(2)}</div>
+              <div class="cart-item-qty">
+                <button class="qty-btn" onclick="changeQty(${c.id}, -1)">−</button>
+                <span class="qty-num">${c.qty}</span>
+                <button class="qty-btn" onclick="changeQty(${c.id}, 1)">+</button>
+              </div>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${c.id})" title="Remove">✕</button>
+          </div>`).join('');
+      }
+    }
+
+    /* ══════════════════════════════════════════════
+       CATEGORY TABS
+    ══════════════════════════════════════════════ */
+    document.getElementById('catTabs').addEventListener('click', e => {
+      const btn = e.target.closest('.cat-tab');
+      if (!btn) return;
+      document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMenu(btn.dataset.cat);
+    });
+
+    /* ══════════════════════════════════════════════
+       CHECKOUT
+    ══════════════════════════════════════════════ */
+    function openModal() {
+      document.getElementById('modalOverlay').classList.add('open');
+      clearCart();
+    }
+    document.getElementById('btnCheckout').addEventListener('click', openModal);
+    document.getElementById('mobileBtnCheckout').addEventListener('click', openModal);
+    document.getElementById('btnClear').addEventListener('click', clearCart);
+    document.getElementById('modalClose').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('open');
+    });
+
+    /* ══════════════════════════════════════════════
+       NAV + HAMBURGER
+    ══════════════════════════════════════════════ */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    /* ── INIT ── */
+    renderMenu('all');
+  </script>
+
+</body>
+</html>
