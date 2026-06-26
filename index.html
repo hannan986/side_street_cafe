@@ -357,82 +357,107 @@
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-      max-width: 900px;
+      gap: 1rem;
+      max-width: 960px;
       margin: 0 auto;
     }
 
+    /* ── Card: text left · image right (matches order page ref) ── */
     .menu-card {
       background: #fff;
-      border-radius: 16px;
-      border: 1px solid rgba(43,26,14,0.08);
-      box-shadow: 0 2px 12px rgba(43,26,14,0.05);
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.07);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
       overflow: hidden;
-      transition: box-shadow 0.26s ease, transform 0.26s ease;
-      cursor: default;
+      transition: box-shadow 0.22s, transform 0.22s;
+    }
+    .menu-card:hover {
+      box-shadow: 0 4px 18px rgba(0,0,0,0.11);
+      transform: translateY(-2px);
+    }
+
+    /* Left: text */
+    .menu-card-content {
+      flex: 1;
+      padding: 1.2rem 1.3rem;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
+      min-width: 0;
     }
 
-    .menu-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(43,26,14,0.11);
+    .menu-dish {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
     }
 
-    .menu-card-img {
-      width: 100%;
-      height: 210px;
+    .menu-card-price {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 0.6rem;
+    }
+
+    .menu-desc {
+      font-size: 0.83rem;
+      color: #888;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      flex-shrink: 0;
     }
 
+    /* Right: square image with + button */
+    .menu-card-img {
+      position: relative;
+      width: 155px;
+      flex-shrink: 0;
+      align-self: stretch;
+    }
     .menu-card-img img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
       display: block;
-      transition: transform 0.5s ease;
     }
 
-    .menu-card:hover .menu-card-img img {
-      transform: scale(1.05);
-    }
+    .menu-tag { display: none; }  /* hidden — price replaces it */
 
-    .menu-card-content {
-      padding: 1.25rem 1.4rem 1.5rem;
+    .btn-menu-add {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      border: none;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.22);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: #333;
+      cursor: pointer;
       display: flex;
-      flex-direction: column;
-      flex: 1;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      padding-bottom: 1px;
+      transition: background 0.18s, color 0.18s, transform 0.15s;
+      text-decoration: none;
     }
-
-    .menu-tag {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--terracotta);
-      background: rgba(184,92,42,0.09);
-      border-radius: 99px;
-      padding: 0.25rem 0.7rem;
-      margin-bottom: 0.7rem;
-      align-self: flex-start;
-    }
-
-    .menu-dish {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 0.45rem;
-      line-height: 1.3;
-    }
-
-    .menu-desc {
-      font-size: 0.855rem;
-      color: #888;
-      line-height: 1.65;
+    .btn-menu-add:hover {
+      background: var(--terracotta);
+      color: #fff;
+      transform: scale(1.1);
     }
 
     /* ─── PHOTO GALLERY STRIP ─────────────────────────── */
@@ -991,43 +1016,47 @@
     </div>
     <div class="menu-grid">
       <div class="menu-card">
-        <div class="menu-card-img">
-          <img src="images/cheese_sandwich.jpg" alt="Cuban Sandwich" loading="lazy" />
-        </div>
         <div class="menu-card-content">
-          <span class="menu-tag">Sandwiches</span>
           <div class="menu-dish">Cuban Sandwich</div>
+          <div class="menu-card-price">$12.99</div>
           <p class="menu-desc">Pressed with ham, roasted pork, Swiss & pickles — a classic done exactly right. Crisp outside, perfectly melted inside.</p>
         </div>
+        <div class="menu-card-img">
+          <img src="images/cheese_sandwich.jpg" alt="Cuban Sandwich" loading="lazy" />
+          <a href="order.html" class="btn-menu-add" title="Order now">+</a>
+        </div>
       </div>
       <div class="menu-card">
-        <div class="menu-card-img">
-          <img src="images/download (1).jpeg" alt="Mac n' Cheese" loading="lazy" />
-        </div>
         <div class="menu-card-content">
-          <span class="menu-tag">Comfort Bowl</span>
           <div class="menu-dish">Mac n' Cheese</div>
+          <div class="menu-card-price">$9.99</div>
           <p class="menu-desc">Rich and creamy with black beans, ham & jalapeños. A Side Street signature that keeps regulars coming back week after week.</p>
         </div>
+        <div class="menu-card-img">
+          <img src="images/download (1).jpeg" alt="Mac n' Cheese" loading="lazy" />
+          <a href="order.html" class="btn-menu-add" title="Order now">+</a>
+        </div>
       </div>
       <div class="menu-card">
-        <div class="menu-card-img">
-          <img src="images/soup.jpg" alt="Homemade Chili" loading="lazy" />
-        </div>
         <div class="menu-card-content">
-          <span class="menu-tag">Soups</span>
           <div class="menu-dish">Homemade Chili</div>
+          <div class="menu-card-price">$7.99</div>
           <p class="menu-desc">Hearty, made in-house from scratch — pairs perfectly with any sandwich on the menu. Ask about today's seasonal soups too.</p>
         </div>
+        <div class="menu-card-img">
+          <img src="images/soup.jpg" alt="Homemade Chili" loading="lazy" />
+          <a href="order.html" class="btn-menu-add" title="Order now">+</a>
+        </div>
       </div>
       <div class="menu-card">
+        <div class="menu-card-content">
+          <div class="menu-dish">Apple Cider Margarita</div>
+          <div class="menu-card-price">$8.99</div>
+          <p class="menu-desc">A seasonal cocktail that's become a must-order. Crisp, tart and beautifully balanced — you won't find this everywhere.</p>
+        </div>
         <div class="menu-card-img">
           <img src="images/Margaritas.jpg" alt="Apple Cider Margarita" loading="lazy" />
-        </div>
-        <div class="menu-card-content">
-          <span class="menu-tag">Drinks</span>
-          <div class="menu-dish">Apple Cider Margarita</div>
-          <p class="menu-desc">A seasonal cocktail that's become a must-order. Crisp, tart and beautifully balanced — you won't find this everywhere.</p>
+          <a href="order.html" class="btn-menu-add" title="Order now">+</a>
         </div>
       </div>
     </div>
